@@ -6,6 +6,6 @@ module.exports = {
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 
-        client.user.setActivity('Twitch', { type: ActivityType.Watching });
+        client.user.setActivity('You.', { type: ActivityType.Watching });
 	},
 };

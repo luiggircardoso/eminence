@@ -6,8 +6,8 @@
     "deploy": "node deploy-commands.js",
     "start": "node index.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Luiggi R. Cardoso(@luiggircardoso)",
+  "license": "GPL-3.0-or-later",
   "description": "",
   "dependencies": {
     "discord.js": "^14.21.0",
