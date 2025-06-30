@@ -3,21 +3,13 @@ const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags, EmbedBuilder } =
 const BannedEmbed = new EmbedBuilder()
     .setColor('White')
     .setAuthor({ name: 'Eminence' }) 
-    .setTitle(`The user has been banned`)
-    .setTimestamp()
-
-
-const IDErrorEmbed = new EmbedBuilder()
-    .setColor('Red')
-    .setAuthor({ name: 'Eminence' }) 
-    .setTitle(`Please provide a user ID to ban.`)
-    .setDescription('Use the user\'s ID, not their username.')
+    .setTitle(`🔨 | The user has been banned`)
     .setTimestamp()
 
 const ErrorEmbed = new EmbedBuilder()
-    .setColor('Red')
+    .setColor('Yellow')
     .setAuthor({ name: 'Eminence' }) 
-    .setTitle(`Please provide a user ID to ban.`)
+    .setTitle(`⚠️ | Something went wrong`)
     .setDescription('There was an error trying to ban the user.')
     .setTimestamp()
 
@@ -25,25 +17,28 @@ module.exports = {
     data: new SlashCommandBuilder()
             .setName('ban')
             .setDescription('Ban a user from the server')
-            .addStringOption(option =>
-		        option.setName('userid')
-			    .setDescription('User ID of the user to ban. Use the user\'s ID, not their username.')
-            .setRequired(true)
+            .addUserOption(option =>
+		        option
+                .setName('user')
+			    .setDescription('User to ban.')
+                .setRequired(true)
+            )
+            .addStringOption(option => 
+                option 
+                    .setName('reason')
+                    .setDescription('Reason for the ban.')
             )
             .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
 
     async execute(interaction) {
-        const userId = interaction.options.getString('userid');
-        if (!userId) {
-            return interaction.reply({ embeds: [IDErrorEmbed], flags: MessageFlags.Ephemeral });
-        }
+        const user = interaction.options.getUser('user')
+        const reason = interaction.options.getString('reason') ?? "No reason provided."
 
         try {
-            const user = await interaction.guild.members.ban(userId);
-            return interaction.reply({ embeds: [BannedEmbed], flags: MessageFlags.Ephemeral });
+            interaction.guild.members.ban(user)
         } catch (error) {
-            console.error(error);
-            return interaction.reply({ embeds: [ErrorEmbed], flags: MessageFlags.Ephemeral });
+            console.log(error)
+            return interaction.reply({ embed: ErrorEmbed })
         }
     }
 };
